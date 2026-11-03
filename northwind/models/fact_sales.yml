@@ -1,0 +1,50 @@
+version: 2
+models:
+  - name: fact_sales
+    description: >-
+      Transaction fact table at order-line grain: one row per product on each order.
+      Contains quantities, pre-discount revenue, discounts and net sold amounts.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [orderid, productkey]
+    columns:
+      - name: orderid
+        description: Order identifier. Repeated across products within an order.
+        tests: [not_null]
+      - name: customerkey
+        description: Foreign key to dim_customer.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customerkey
+      - name: employeekey
+        description: Foreign key to dim_employee.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_employee')
+                field: employeekey
+      - name: orderdatekey
+        description: Foreign key to dim_date for date of order.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: datekey
+      - name: productkey
+        description: Foreign key to dim_product and part of the order-line grain.
+        tests: [not_null]
+      - name: quantity
+        description: Additive count of product units on the order line.
+        tests: [not_null]
+      - name: extendedpriceamount
+        description: Quantity times original unit price (before discounts).
+        tests: [not_null]
+      - name: discountamount
+        description: Discount value for the line, rounded to cents.
+        tests: [not_null]
+      - name: soldamount
+        description: Extended price minus discount amount.
+        tests: [not_null]

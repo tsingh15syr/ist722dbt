@@ -1,0 +1,25 @@
+version: 2
+models:
+  - name: dim_product
+    description: Product dimension. One row per product, including category details and supplier key.
+    columns:
+      - name: productkey
+        description: Surrogate product key generated from productid.
+        tests: [unique, not_null]
+      - name: productid
+        description: Product source business identifier.
+        tests: [unique, not_null]
+      - name: productname
+        description: Product name.
+      - name: supplierkey
+        description: Foreign key to dim_supplier.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_supplier')
+                field: supplierkey
+      - name: categoryname
+        description: Product category name.
+        tests: [not_null]
+      - name: categorydescription
+        description: Product category description.

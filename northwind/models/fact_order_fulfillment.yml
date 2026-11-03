@@ -1,0 +1,60 @@
+version: 2
+models:
+  - name: fact_order_fulfillment
+    description: >-
+      Order fulfillment accumulating snapshot fact table. One row per order;
+      product line items are aggregated to the order level.
+    columns:
+      - name: orderid
+        description: Original order number; degenerate dimension and one row per order.
+        tests: [unique, not_null]
+      - name: customerkey
+        description: Foreign key to dim_customer.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customerkey
+      - name: employeekey
+        description: Foreign key to dim_employee.
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_employee')
+                field: employeekey
+      - name: orderdatekey
+        description: Order date key for dim_date.
+      - name: requireddatekey
+        description: Required delivery date key for dim_date.
+      - name: shippeddatekey
+        description: Shipped date key for dim_date; null if not shipped.
+      - name: freight
+        description: Shipping cost for the order.
+      - name: quantityonorder
+        description: Sum of quantities of all products ordered.
+      - name: totalorderamount
+        description: Order value after discounts, summed from order lines.
+      - name: daysfromordertoshipped
+        description: Calendar days between order date and shipped date.
+      - name: daysfromordertorequired
+        description: Calendar days between order date and required date.
+      - name: shippedtorequireddelta
+        description: Calendar days from required date to shipment; positive indicates late shipment.
+      - name: shippedontime
+        description: Y if shipped by required date, N if late, null if unshipped or date unavailable.
+      - name: shippercompanyname
+        description: Shipping carrier name.
+      - name: shipname
+        description: Name of recipient.
+      - name: shipaddress
+        description: Shipping address.
+      - name: shipcity
+        description: Shipping city.
+      - name: shipregion
+        description: Shipping region.
+      - name: shippostalcode
+        description: Shipping postal code.
+      - name: shipcountry
+        description: Shipping country.
+      - name: shipvia
+        description: Shipping carrier source identifier.
