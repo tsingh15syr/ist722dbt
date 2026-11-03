@@ -1,0 +1,10 @@
+version: 2
+models:
+  - name: obt_order_fulfillment
+    description: >-
+      One big table for order fulfillment combining the order-level fact with
+      customer, employee and order-date dimensions. One row per order.
+    columns:
+      - name: orderid
+        description: Source order identifier and one-big-table grain.
+        tests: [unique, not_null]
